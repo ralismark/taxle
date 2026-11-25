@@ -1,0 +1,22 @@
+.ShowObservation__carousel {
+  margin: 0 auto;
+
+  /* displaying */
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1em 2em;
+  > * {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  /* scroll snap */
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  > * {
+    scroll-snap-align: center;
+  }
+}

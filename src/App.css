@@ -1,8 +1,98 @@
-html {
-  color-scheme: light dark;
-  font-family: system-ui;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+main {
+  margin: 1em;
+  gap: 1em;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "title title"
+    "observation taxonomy";
+
+  @media (max-width: 30rem) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "observation"
+      "taxonomy";
+  }
+
+  > h1 { grid-area: title; }
+  > .ShowObservation { grid-area: observation; }
+  > .taxonomy { grid-area: taxonomy; }
+}
+
+
+h1 {
+  text-align: center;
+  margin: 0;
+}
+
+.Taxle {
+  .Taxon {
+    display: block;
+    background: #cde;
+    border: 1px solid grey;
+    padding: 0.5em;
+  }
+
+  .Taxle__input {
+    background: #eff;
+    display: block;
+
+    width: 100%;
+    padding: 0.5em;
+
+    border: 1px solid grey;
+  }
+
+  .Taxle__suggestions {
+    padding-left: 2em;
+
+    > p {
+      margin: 0.5em;;
+      font-style: italic;
+    }
+  }
+}
+
+.Taxle__answersheet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  > .Taxon--match {
+    background: lightgreen;
+    grid-column: 1 / 3;
+  }
+  > .Taxon--badguess, > .Taxon--extraguess {
+    grid-column: 1 / 2;
+  }
+  > .Taxon--expected {
+    grid-column: 2 / 3;
+    background: lightyellow;
+  }
+
+  > .Taxon--badguess {
+    background: pink;
+  }
+}
+
+[role=button] {
+  cursor: pointer;
+}
+
+.reset {
+  float: right;
+}
+
+.TaxonLabel[data-rank="species"] {
+  font-weight: bolder;
+}
+
+.TaxonLabel--minor {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: smaller;
 }
