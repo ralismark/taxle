@@ -3,24 +3,20 @@
 }
 
 main {
-  margin: 1em;
   gap: 1em;
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* https://css-tricks.com/preventing-a-grid-blowout/ */
   grid-template-areas:
-    "title title"
     "observation taxonomy";
 
   @media (max-width: 30rem) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "title"
       "observation"
       "taxonomy";
   }
 
-  > h1 { grid-area: title; }
   > .ShowObservation { grid-area: observation; }
   > .taxonomy { grid-area: taxonomy; }
 }

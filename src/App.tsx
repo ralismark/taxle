@@ -85,7 +85,7 @@ export function SearchTaxa(props: {
   </>
 }
 
-export function App() {
+export function Taxle() {
   const [games, setGames] = useState(1)
   const [totalScore, setTotalScore] = useState(0)
 
@@ -203,8 +203,6 @@ export function App() {
   return (
     obs && guessTaxon && expectedTaxon &&
     <main>
-      <h1>Taxle!</h1>
-
       <ShowObservation observation={obs} />
 
       <section className="Taxle">
@@ -267,4 +265,17 @@ export function App() {
       </section>
     </main>
   );
+}
+
+export function App() {
+  return <>
+    <h1>Taxle!</h1>
+    <Taxle />
+    <hr />
+    <footer>
+      <p>
+        All data from <a href="https://www.inaturalist.org/">INaturalist</a>.
+      </p>
+    </footer>
+  </>
 }

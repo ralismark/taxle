@@ -86,6 +86,7 @@ export type Photo = {
 
 export type Observation = {
   uuid: string,
+  description: string | null,
   observed_on_string: string | null,
   observed_time_zone: string | null,
   place_guess: string | null,
@@ -153,7 +154,6 @@ export const observation_search = new Api<{
     fields: "all",
   }),
   r => {
-    console.log(r)
     r.results._total_results = r.total_results
     return r.results
   },

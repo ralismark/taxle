@@ -7,14 +7,24 @@ export function ShowObservation(props: { observation: INat.Observation }) {
   return <section className="ShowObservation">
     <div className="ShowObservation__carousel">
       {obs.photos && obs.photos.map(photo => (
-        <img
+        <figure
           key={photo.id}
-          src={photo.url?.replace(/[a-z]+(\.[a-z0-9.]+)$/, "original$1")}
-        />
+        >
+          <img
+            src={photo.url?.replace(/[a-z]+(\.[a-z0-9.]+)$/, "large$1")}
+          />
+          <figcaption>
+            {photo.attribution}
+          </figcaption>
+        </figure>
       ))}
     </div>
 
     <dl>
+      {obs.description && <>
+        <dt>What</dt>
+        <dd>{obs.description}</dd>
+      </>}
       {obs.place_guess && <>
         <dt>Where</dt>
         <dd>{obs.place_guess}</dd>
