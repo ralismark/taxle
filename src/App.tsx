@@ -37,7 +37,7 @@ export function TaxonLabel(props: {
 }) {
   return <span
     className={`TaxonLabel ${props.taxon.rank_level % 10 !== 0 ? "TaxonLabel--minor" : ""}`}
-    data-rank={props.taxon.rank}
+    data-rank={props.taxon.rank_level}
   >
     {props.taxon.preferred_common_name
       ? <>{props.taxon.preferred_common_name} <small>({props.taxon.rank}/{props.taxon.rank_level} {props.taxon.name})</small></>
