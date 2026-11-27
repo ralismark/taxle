@@ -1,0 +1,10 @@
+.TaxonLabel {
+  &[data-rank="10"] {
+    font-weight: bolder;
+  }
+
+  &.TaxonLabel--minor {
+    color: color-mix(in srgb, var(--body-fg), transparent 20%);
+    font-size: smaller;
+  }
+}

@@ -11,6 +11,8 @@ export function ShowObservation(props: { observation: INat.Observation }) {
           key={photo.id}
         >
           <img
+            width={photo.original_dimensions.width}
+            height={photo.original_dimensions.height}
             src={photo.url?.replace(/[a-z]+(\.[a-z0-9.]+)$/, "large$1")}
           />
           <figcaption>

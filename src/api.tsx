@@ -2,11 +2,6 @@ import { DependencyList, useEffect, useState } from "react"
 
 export const API_BASE = "https://api.inaturalist.org/v2"
 
-// Taxon for the life state-of-matter
-//
-// Note that it will not appear in taxon ancestries
-export const TAXON_ID_LIFE = 48460
-
 type ApiResult<T> = {
   total_results: number,
   page: number,
@@ -14,12 +9,23 @@ type ApiResult<T> = {
   results: T,
 }
 
-type ApiError = {
+type ErrorResult = {
   status: string,
   errors: {
     errorCode: string,
     message: string,
   }[]
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly api: Api<any, any>,
+    readonly args: any,
+    readonly url: string,
+  ) {
+    super(message)
+  }
 }
 
 export class Api<Args, Out> {
@@ -28,23 +34,36 @@ export class Api<Args, Out> {
     readonly mapper: (results: ApiResult<any>) => Out = x => x.results,
   ) {}
 
+  async fetch(args: Args, opts: { signal?: AbortSignal } = {}): Promise<Out> {
+    const url = API_BASE + this.createUrl(args)
+    const r = await fetch(url, {
+      signal: opts.signal,
+    })
+    const json: ApiResult<any> | ErrorResult = await r.json()
+    if ("status" in json) {
+      throw new ApiError(
+        json.errors[0].message,
+        this,
+        args,
+        url
+      )
+    } else {
+      return this.mapper(json)
+    }
+  }
+
   use(args: Args, deps: DependencyList): Out | undefined {
     const [value, setValue] = useState<{v?: Out, e?: Error}>({v: undefined})
 
     useEffect(() =>  {
       const aborter = new AbortController()
-      fetch(API_BASE + this.createUrl(args), {
-        signal: aborter.signal,
-      })
-        .then(r => r.json())
-        .then((r: ApiResult<any> | ApiError) => {
-          if ("status" in r) {
-            throw Error(r.errors[0].message)
-          } else {
-            const v = this.mapper(r)
-            setValue({v})
-          }
-        })
+      this.fetch(
+        args,
+        {
+          signal: aborter.signal
+        }
+      )
+        .then(v => setValue({v}))
         .catch(e => {
           if (e instanceof DOMException && e.name === "AbortError") return
           setValue({e})
@@ -60,15 +79,25 @@ export class Api<Args, Out> {
 
 function urlParams(args: { [k: string]: any }): URLSearchParams {
   return new URLSearchParams(
-    Object.entries(args)
-      .map(([k, v]) => {
-        if (v instanceof Array) {
-          return [k, v.join(",")]
+    Array.from(function*() {
+      for (const [k, v] of Object.entries(args)) {
+        if (v === undefined) {
+          continue
+        } if (v instanceof Array) {
+          yield [k, v.join(",")]
         } else {
-          return [k, String(v)]
+          yield [k, String(v)]
         }
-      })
+      }
+    }())
   )
+}
+
+function one<T>(arr: T[]): T | null {
+  if (arr.length === 0) return null
+  if (arr.length === 1) return arr[0]
+  console.error("Too many elements", arr)
+  throw RangeError("too many elements")
 }
 
 // ----------------------------------------------------------------------------
@@ -110,14 +139,14 @@ export type TaxonDetails = Taxon & {
   children?: Taxon[],
 }
 
-export const observation_details = new Api<string, Observation>(
+export const observations_details = new Api<string, Observation>(
   uuid => `/observations/${uuid}?fields=all`,
-  r => r.results[0],
+  r => one(r.results)!,
 )
 
 export const taxa_details = new Api<number, TaxonDetails>(
   id => `/taxa/${id}?fields=all`,
-  r => r.results[0],
+  r => one(r.results)!,
 )
 
 export const taxa_autocomplete = new Api<{
@@ -136,7 +165,11 @@ export const taxa_autocomplete = new Api<{
   },
 )
 
-export const observation_search = new Api<{
+export const taxa_iconic = new Api<{}, Taxon[]>(
+  () => `/taxa/iconic?fields=all`,
+)
+
+export type ObservationSearchParams = {
   q?: string,
   identified?: boolean,
   quality_grade?: ("casual" | "needs_id" | "research")[],
@@ -145,10 +178,13 @@ export const observation_search = new Api<{
   taxon_id?: number[],
   order?: "desc" | "asc",
   order_by?: "created_at" | "geo_score" | "id" | "observed_on" | "random" | "species_guess" | "updated_at" | "votes",
+  photos?: boolean,
 
   page?: number,
   per_page?: number,
-}, Observation[] & {_total_results: number}>(
+}
+
+export const observation_search = new Api<ObservationSearchParams, Observation[] & {_total_results: number}>(
   args => `/observations?` + urlParams({
     ...args,
     fields: "all",
@@ -157,4 +193,38 @@ export const observation_search = new Api<{
     r.results._total_results = r.total_results
     return r.results
   },
+)
+
+// Taxon for the life state-of-matter
+//
+// Note that it will not appear in taxon ancestries
+export const TAXON_LIFE: Taxon = {
+    id: 48460,
+    ancestor_ids: [],
+    name: "Life",
+    preferred_common_name: "life",
+    rank: "stateofmatter",
+    rank_level: 100,
+}
+
+export type Place = {
+  id: number,
+  display_name: string,
+  name: string,
+}
+
+export const places_search = new Api<{
+  q: string,
+  order_by?: "area",
+  geo?: boolean,
+}, Place[]>(
+  args => `/places?` + urlParams({
+    ...args,
+    fields: "all",
+  }),
+)
+
+export const places_details = new Api<number | string, Place>(
+  id => `/places/${id}?fields=all`,
+  r => one(r.results)!,
 )
