@@ -75,7 +75,7 @@ export function GamemodeSelector(props: {
         onChange={p => props.setGamemode({...props.gamemode, place: p})}
 
         isClearable={true}
-        placeholder="Anywhere"
+        placeholder="Worldwide"
         noOptionsMessage={q => q ? "Type to search" : "No options"}
 
         cacheOptions

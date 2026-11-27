@@ -6,7 +6,7 @@ main {
   grid-template-areas:
     "observation taxonomy";
 
-  @media (max-width: 30rem) {
+  @media (max-width: 40rem) {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "observation"

@@ -46,7 +46,11 @@ createRoot(document.body).render(
   <StrictMode>
     <header>
       <h1>
-        <span className="TaxleLogo">Taxle!</span>
+        <span className="TaxleLogo">
+          <a href="">
+            Taxle!
+          </a>
+        </span>
         <span className="__suffix">
           .<a href="https://kwellig.garden">kwellig.garden</a>
         </span>

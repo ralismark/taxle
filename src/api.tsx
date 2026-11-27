@@ -114,6 +114,7 @@ export type Photo = {
 }
 
 export type Observation = {
+  id: number,
   uuid: string,
   description: string | null,
   observed_on_string: string | null,

@@ -146,6 +146,8 @@ export function Taxle() {
     }
   }
 
+  const observationUrl = `https://www.inaturalist.org/observations/${obs.id}`
+
   return (
     obs && guessTaxon && expectedTaxon &&
     <main>
@@ -189,8 +191,6 @@ export function Taxle() {
         </div> : <>
           <div className="Taxle__answersheet">
             {Array.from(answerSheet())}
-
-
           </div>
 
           <hr />
@@ -202,6 +202,9 @@ export function Taxle() {
             Play again
           </button>
 
+          <p>
+            <a href={observationUrl}>{observationUrl}</a>
+          </p>
           <p>
             <strong>Score: {calcScore()}</strong>
           </p>
