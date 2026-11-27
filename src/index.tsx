@@ -21,6 +21,10 @@ function Body() {
   if (phase == "prepare") {
     return <>
       <section className="Body__GamemodeSelector">
+        <p>
+          I want to try identify organisms:
+        </p>
+
         <GamemodeSelector
           gamemode={gamemode}
           setGamemode={setGamemode}
@@ -40,20 +44,20 @@ function Body() {
 
 createRoot(document.body).render(
   <StrictMode>
-    <h1>
-      <span className="TaxleLogo">Taxle!</span>
-      <span className="__suffix">
-        .<a href="https://kwellig.garden">kwellig.garden</a>
-      </span>
-    </h1>
-    <hr />
+    <header>
+      <h1>
+        <span className="TaxleLogo">Taxle!</span>
+        <span className="__suffix">
+          .<a href="https://kwellig.garden">kwellig.garden</a>
+        </span>
+      </h1>
+    </header>
 
     <Body />
 
     <footer>
-      <hr />
       <p>
-        All data from <a href="https://www.inaturalist.org/">INaturalist</a>.
+        All data from <a href="https://www.inaturalist.org/">INaturalist</a>
       </p>
     </footer>
   </StrictMode>

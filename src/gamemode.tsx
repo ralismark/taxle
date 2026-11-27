@@ -68,7 +68,7 @@ export function GamemodeSelector(props: {
 
   return <>
     <label>
-      In area...
+      in area
 
       <AsyncSelect
         value={props.gamemode.place}
@@ -91,7 +91,7 @@ export function GamemodeSelector(props: {
     </label>
 
     <label>
-      Under taxon...
+      under taxon
 
       <AsyncSelect
         value={props.gamemode.rootTaxon}
