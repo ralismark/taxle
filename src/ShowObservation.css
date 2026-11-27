@@ -1,3 +1,9 @@
+.ShowObservation {
+  dd {
+    white-space: pre-wrap;
+  }
+}
+
 .ShowObservation__carousel {
   margin: 0 auto;
 

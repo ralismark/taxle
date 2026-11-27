@@ -2,6 +2,7 @@ import * as INat from './api'
 import AsyncSelect from 'react-select/async'
 import { TaxonLabel } from './TaxonLabel'
 import { createContext } from 'react'
+import { MyAsyncSelect } from './misc'
 
 export type Gamemode = {
   place: INat.Place | null,
@@ -53,24 +54,11 @@ export function GamemodeSelector(props: {
   gamemode: Gamemode,
   setGamemode: (gm: Gamemode) => void,
 }) {
-  const selectTheme = (theme: any) => ({
-    ...theme,
-    colors: {
-      ...theme.colors,
-      primary25: "var(--button-tint)", // menu hovered
-      primary: "var(--primary)", // menu selected
-
-      neutral0: "var(--box-tint)", // background
-      neutral20: "var(--stroke)",
-      neutral80: "var(--body-fg)", // normal text
-    }
-  })
-
   return <>
     <label>
       in area
 
-      <AsyncSelect
+      <MyAsyncSelect
         value={props.gamemode.place}
         onChange={p => props.setGamemode({...props.gamemode, place: p})}
 
@@ -85,15 +73,13 @@ export function GamemodeSelector(props: {
 
         getOptionValue={p => p.id.toString()}
         formatOptionLabel={p => p.display_name}
-
-        theme={selectTheme}
       />
     </label>
 
     <label>
       under taxon
 
-      <AsyncSelect
+      <MyAsyncSelect
         value={props.gamemode.rootTaxon}
         onChange={o => props.setGamemode({...props.gamemode, rootTaxon: o ?? INat.TAXON_LIFE})}
 
@@ -109,8 +95,6 @@ export function GamemodeSelector(props: {
 
         getOptionValue={taxon => taxon.id.toString()}
         formatOptionLabel={taxon => <TaxonLabel taxon={taxon} />}
-
-        theme={selectTheme}
       />
       </label>
   </>
